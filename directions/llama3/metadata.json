@@ -1,0 +1,61 @@
+{
+ "model": "meta-llama/Meta-Llama-3-8B-Instruct",
+ "revision": "8afb486c1db24fe5011ec46dfbe5b5dccdb575c2",
+ "layer": 14,
+ "P": 5,
+ "d": 4096,
+ "L": 32,
+ "template_tokens": [
+  "<|eot_id|>",
+  "<|start_header_id|>",
+  "assistant",
+  "<|end_header_id|>",
+  "\n\n"
+ ],
+ "template_format": "hf",
+ "attention": "eager",
+ "vertex": "0",
+ "tensors": {
+  "e1": [
+   4096
+  ],
+  "e1_concat": [
+   5,
+   4096
+  ],
+  "m": [
+   5,
+   4096
+  ]
+ },
+ "sign_conventions": "<e1, mean over template positions of (mu+ - mu-) at the main layer> >= 0; <e1_concat, m> >= 0; m = normalized mean of the unit normals (points toward refusal)",
+ "removal": "e1: h <- h - <e1, h> e1 at the input of a layer and on its attention and MLP outputs; e1_concat: x <- x - <x, e1_concat> e1_concat on the template state (P positions concatenated) at the input of the main layer, prefill only",
+ "border_prompts": 248,
+ "folds": [
+  124,
+  124
+ ],
+ "normals": {
+  "responses_per_estimate": 48,
+  "estimates": 2
+ },
+ "spectrum": {
+  "e1": {
+   "ratio_1_2": 7.216949635629323,
+   "share_lambda1": 0.6026696081971952,
+   "lambda1_over_rotation": 19.66417365005059,
+   "fold_stability": 0.9979255199432373
+  },
+  "e1_concat": {
+   "ratio_1_2": 22.285520667883066,
+   "share_lambda1": 0.7316998925792323,
+   "lambda1_over_rotation": 12.111053693189161,
+   "fold_stability": 0.9965811371803284
+  }
+ },
+ "cos_e1_concat_m": 0.7317020893096924,
+ "code_commit": null,
+ "seed": 0,
+ "exported": "2026-11-24",
+ "sha256": "9bb05b6d430b363fbc4697284e9748876c2513d06cd8562b27c4189b0377aadd"
+}

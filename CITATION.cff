@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below."
+title: "Géométrie de la région de refus d'un modèle de langage : un axe, un seuil par prompt, une région large"
+authors:
+  - family-names: Bec
+    given-names: Justin
+date-released: 2026-11-30
+version: 1.0.0
+license: MIT

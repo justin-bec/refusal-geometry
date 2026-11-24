@@ -1,0 +1,12 @@
+# results, model outputs and downloaded data are never committed
+runs/
+data/*
+!data/download.py
+!data/README.md
+*.pt
+*.log
+*.jsonl
+__pycache__/
+*.egg-info/
+.venv/
+.pytest_cache/

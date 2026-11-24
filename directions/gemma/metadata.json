@@ -1,0 +1,57 @@
+{
+ "model": "google/gemma-2-9b-it",
+ "revision": "11c9b309abf73637e4b6f9a3fa1e92e615547819",
+ "layer": 22,
+ "P": 5,
+ "d": 3584,
+ "L": 42,
+ "template_tokens": [
+  "<end_of_turn>",
+  "\n",
+  "<start_of_turn>",
+  "model",
+  "\n"
+ ],
+ "template_format": "hf",
+ "attention": "eager",
+ "vertex": "0",
+ "tensors": {
+  "e1": [
+   3584
+  ],
+  "e1_concat": [
+   5,
+   3584
+  ]
+ },
+ "sign_conventions": "<e1, mean over template positions of (mu+ - mu-) at the main layer> >= 0; <e1_concat, m> >= 0; m = normalized mean of the unit normals (points toward refusal)",
+ "removal": "e1: h <- h - <e1, h> e1 at the input of a layer and on its attention and MLP outputs; e1_concat: x <- x - <x, e1_concat> e1_concat on the template state (P positions concatenated) at the input of the main layer, prefill only",
+ "border_prompts": 82,
+ "folds": [
+  41,
+  41
+ ],
+ "normals": {
+  "responses_per_estimate": 48,
+  "estimates": 2
+ },
+ "spectrum": {
+  "e1": {
+   "ratio_1_2": 12.898663122472,
+   "share_lambda1": 0.6981241111944977,
+   "lambda1_over_rotation": 9.566211250913831,
+   "fold_stability": 0.988175094127655
+  },
+  "e1_concat": {
+   "ratio_1_2": 17.743472169337412,
+   "share_lambda1": 0.7348308307214136,
+   "lambda1_over_rotation": 5.821650138318412,
+   "fold_stability": 0.981142520904541
+  }
+ },
+ "cos_e1_concat_m": 0.7189369797706604,
+ "code_commit": null,
+ "seed": 0,
+ "exported": "2026-11-24",
+ "sha256": "0a0c1e590c788eae5d6c6d58f3add163a7eb75f3800b14e05867c5c25d4fa5a3"
+}

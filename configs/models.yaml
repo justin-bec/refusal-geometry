@@ -1,0 +1,46 @@
+# The four models of the article. `layer` is the main layer c: the state space is the template state at its input.
+#   llama3, llama2: layer 14 (the bottleneck of Llama-3-8B, and the layer Arditi et al. keep for Llama-2);
+#   qwen, gemma: the layer of largest necessity in a one-layer transplantation (experiments/01_bottleneck.py).
+# `attention`: Qwen2.5 must use sdpa (eager computes the attention scores in bfloat16 before the softmax and
+#   degrades the intact model: GSM8K 24 % against 89 %); Gemma-2 must use eager (sdpa does not handle its soft
+#   capping of the attention logits); the two Llama are unaffected.
+# `template`: "arditi" = the hard-coded Llama-2 format of Arditi et al., "[INST] {instruction} [/INST] "
+#   (no system prompt); "hf" = the chat template of the tokenizer.
+# `refusal_words`: first tokens of refusals, for the refusal score of the selection rule of Arditi et al.
+# `arditi_published`: (layer, position) of the direction published by Arditi et al., printed next to ours.
+# `revision`: Hugging Face commit of the weights. A direction only makes sense for given weights: fill these with
+#   `python configs/pin_revisions.py` (reads the versions in your local Hugging Face cache).
+llama3:
+  id: meta-llama/Meta-Llama-3-8B-Instruct
+  layer: 14
+  attention: eager
+  template: hf
+  revision: 8afb486c1db24fe5011ec46dfbe5b5dccdb575c2
+  refusal_words: [I]
+  arditi_published: [12, -5]
+llama2:
+  id: meta-llama/Llama-2-7b-chat-hf
+  layer: 14
+  attention: sdpa
+  template: arditi
+  revision: f5db02db724555f92da89c216ac04704f23d4590
+  refusal_words: [I]
+  arditi_published: [14, -1]
+qwen:
+  id: Qwen/Qwen2.5-7B-Instruct
+  layer: 19
+  attention: sdpa
+  template: hf
+  revision: a09a35458c702b33eeacc393d103063234e8bc28
+  refusal_words: [I, As]
+gemma:
+  id: google/gemma-2-9b-it
+  layer: 22
+  attention: eager
+  template: hf
+  revision: 11c9b309abf73637e4b6f9a3fa1e92e615547819
+  refusal_words: [I]
+# the judge (WildGuard), pinned the same way
+judge:
+  id: allenai/wildguard
+  revision: cbba4823f3e8020e5a74a5e29bf85072def6f2ff

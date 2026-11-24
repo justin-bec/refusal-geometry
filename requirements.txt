@@ -1,0 +1,18 @@
+# PyTorch is NOT pinned here: install the build that matches your GPU first.
+#   NVIDIA (CUDA):  pip install torch --index-url https://download.pytorch.org/whl/cu124
+#   AMD (ROCm):     pip install torch --index-url https://download.pytorch.org/whl/rocm6.2
+#                   (or a TheRock nightly build for recent AMD GPUs)
+# torch.cuda works on both; the code never calls a backend-specific API.
+# torch: see above (deliberately not listed, so that pip never replaces a ROCm or CUDA build)
+transformers>=4.56,<5.40    # 5.40 removes `past_key_values`, used by the generation loop
+sentencepiece          # tokenizers of WildGuard (Mistral) and Llama-2
+protobuf               # read by some sentencepiece tokenizers
+accelerate>=0.34
+numpy
+pandas
+pyarrow
+pyyaml
+safetensors
+matplotlib
+datasets
+huggingface_hub
