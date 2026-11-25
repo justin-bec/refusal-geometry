@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 05_one_layer.py -- removing e1 at ONE layer: which positions matter, at which layers it works, and the capabilities.
-Article: "One layer, all positions". Prompts of Arditi et al., MMLU, GSM8K, XSTest (published); no attack generated.
+Article: "Removing e1 from every layer, then from one" (one layer), appendix on the four models. Prompts of Arditi et al., MMLU, GSM8K, XSTest (published); no attack generated.
 
 POSITIONS of a formatted prompt: INSTRUCTION = the real positions before the template (including the begin token
 and the user header); TEMPLATE = the P last prompt positions; GENERATED = the response tokens. Padding is never

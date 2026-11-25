@@ -30,6 +30,8 @@ It provides:
 ## Installation
 
 ```bash
+git clone https://github.com/justin-bec/refusal-geometry.git
+cd refusal-geometry
 bash setup.sh                      # creates .venv with the PyTorch build for this machine's GPU, checks it sees it
 source .venv/bin/activate
 hf auth login                      # models (Llama, Gemma) and gated datasets
@@ -100,16 +102,16 @@ recomputed.
 
 | script | what it measures | article | GPU time (order of magnitude, per model) |
 |---|---|---|---|
-| `01_bottleneck.py` | one-layer transplantation of the template state: sufficiency, necessity; main layer *c* | models and protocol; a fixed space (bottleneck) | 1–2 h |
-| `02_directions.py` | means μ±, boundary points, normals (estimated twice), spectrum of *M*, e1, e1^concat, *m* | judged refusal and its gradient; boundary points; the axis *m*; the direction e1; spectrum (one vector) | 6–10 h |
-| `03_arditi_selection.py` | the direction of Arditi et al., selected by their rule | models and protocol | 15 min |
-| `04_ablate_everywhere.py` | e1 and Arditi et al. removed everywhere, vertex 0 and vertex μ⁻ | removing e1 everywhere | 1 h |
-| `05_one_layer.py` | e1 at one layer: types of positions, layer sweep, capabilities | one layer, all positions | 3 h |
-| `06_one_vector.py` | e1^concat removed from / added to the template state of one layer; capabilities | one vector | 3 h |
-| `07_thresholds.py` | thresholds along *m* of ~1 300 published prompts; pairs (base, attack); remeasures | (H0) along *m*; a threshold per prompt | 20 h, + 25 h per remeasure |
-| `08_slopes.py` | normals at ~600 anchors (two estimates each) | the slope of the border | 15 h |
-| `09_h0.py` | local angle condition (CPU); refusal curves around the threshold (GPU) | (H0) along *m* | 6 h |
-| `10_gains.py` | margin gain of added directions | adding and removing: (H1) | 4 h |
+| `01_bottleneck.py` | one-layer transplantation of the template state: sufficiency, necessity; main layer *c* | protocols; a space that decides alone | 1–2 h |
+| `02_directions.py` | means μ±, boundary points, normals (estimated twice), spectrum of *M*, e1, e1^concat, *m* | measuring refusal and its normals; the axis and the removal direction; one vector | 3.5–8 h |
+| `03_arditi_selection.py` | the direction of Arditi et al., selected by their rule | protocols | 10 min |
+| `04_ablate_everywhere.py` | e1 and Arditi et al. removed everywhere, vertex 0 and vertex μ⁻ | removing e1 from every layer | 30 min |
+| `05_one_layer.py` | e1 and Arditi et al. at one layer: types of positions, layer sweep, capabilities | removing e1 from one layer | 1.5–2 h |
+| `06_one_vector.py` | e1^concat removed from / added to the template state of one layer; capabilities | one vector | 1.5 h |
+| `07_thresholds.py` | thresholds along *m* of ~1 300 published prompts; pairs (base, attack); remeasures | an axis: (H1); a threshold per prompt | 20 h, + 25 h per remeasure |
+| `08_slopes.py` | normals at ~600 anchors (two estimates each) | a wide region: (H2) | 15 h |
+| `09_h0.py` | local angle condition (CPU); refusal curves around the threshold (GPU) | an axis: (H1) | 6 h |
+| `10_gains.py` | margin gain of added directions | an axis: (H1) | 4 h |
 | `11_threshold_analysis.py` | AUCs of position, threshold, margin; decomposition of what an attack moves (CPU) | a threshold per prompt | seconds |
 | `12_width.py` | width criterion on the slopes (CPU) | the width: (H2) | seconds |
 
@@ -118,6 +120,9 @@ recomputed.
 - Scripts 01–05 run on the four models by default (`--models llama3,llama2,qwen,gemma`).
 - Scripts 06–12 run on Llama-3-8B-Instruct, the model with a bottleneck.
 - Models and their main layer, attention implementation and chat format are in `configs/models.yaml`.
+- On Gemma-2-9B-it, `configs/models.yaml` fixes the candidate of Arditi et al. at layer 23, position −1: their rule
+  picks layer 23 or layer 31 depending on the estimates of the means, and we keep the stronger of the two.
+  `03_arditi_selection.py` prints both.
 
 **Dependencies.**
 
@@ -135,8 +140,13 @@ command reuses what is done.
 ## Reproducibility
 
 Scripts mix all conditions and prompts in the same batches, and responses are sampled at temperature 1. Results
-therefore reproduce **within run-to-run variability, not bit for bit**. In the article, two independent runs of
-the same ablation differ by about two points.
+therefore reproduce **within run-to-run variability, not bit for bit**. Two independent runs of the same ablation
+differ by about two points.
+
+The tables of the article on the four models (scripts 02–06) come from this code. The measurements of the geometry
+of Llama-3-8B (thresholds, slopes, gains, width: scripts 07–12) come from an earlier run of the research code this
+repository was written from. The axis *m* recomputed by `02_directions.py` has a cosine of 0.96 to 0.99 with the
+one used there, as close as the two halves of a single run (0.97).
 
 Seeds are fixed (`--seed`). They select the same prompts in every script.
 

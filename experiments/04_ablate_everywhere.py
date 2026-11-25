@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 04_ablate_everywhere.py -- removing e1 everywhere, as Arditi et al. remove their direction, and at which vertex.
-Article: "Removing e1 everywhere, as Arditi et al." Prompts of their repository; no attack is generated.
+Article: "Removing e1 from every layer, then from one" (every layer), appendix on the four models. Prompts of their repository; no attack is generated.
 
 ABLATION EVERYWHERE: at every layer (block input, attention and MLP outputs), every prompt position and every
 generated token. Two vertices:

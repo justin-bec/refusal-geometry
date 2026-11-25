@@ -30,6 +30,7 @@ class ModelSpec:
     template: str = "hf"                 # "hf" (tokenizer chat template) or "arditi" (Llama-2 format)
     refusal_words: list = field(default_factory=lambda: ["I"])   # first tokens of refusals (Arditi et al.)
     arditi_published: list = None        # (layer, position) published by Arditi et al., if any
+    arditi_choice: list = None           # (layer, position) imposed instead of the choice of their rule (models.yaml)
     revision: str = None                 # Hugging Face commit of the weights (configs/pin_revisions.py)
 
 

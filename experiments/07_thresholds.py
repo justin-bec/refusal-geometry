@@ -2,7 +2,7 @@
 """
 07_thresholds.py -- the refusal THRESHOLD of published prompts along the axis m, prompt by prompt, and for each
 (base request, attack) pair, the threshold of each state placed in the context of the other.
-Article: "(H0) along m", "A threshold per prompt" (data; analysis in 11_threshold_analysis.py). Llama-3-8B-Instruct
+Article: "An axis: (H1)", "A threshold per prompt" (data; analysis in 11_threshold_analysis.py). Llama-3-8B-Instruct
 by default. Published prompts only (jailbreak artifacts, transformations, benchmarks, harmless prompts that look
 suspicious, and their base requests): nothing is generated or optimized.
 

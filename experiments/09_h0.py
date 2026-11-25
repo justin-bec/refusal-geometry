@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
-09_h0.py -- (H0) along m: is the region a threshold region along m, and does the refusal increase along m?
-Article: "(H0) along m". Llama-3-8B-Instruct by default. Published prompts (07_thresholds.py); nothing is generated
+09_h0.py -- (H1) along m: is the region a threshold region along m, and does the refusal increase along m?
+Article: "An axis: (H1)". Llama-3-8B-Instruct by default. Published prompts (07_thresholds.py); nothing is generated
 or optimized.
 
 TWO PARTS.
@@ -50,7 +50,7 @@ COLOURS = {"m": "#000000", "e1^concat": "#CC79A7", "Arditi et al. (P positions)"
 
 
 def parse(argv=None):
-    ap = cli.parser("(H0) along m: local angle condition at the anchors, and refusal curves around the threshold.",
+    ap = cli.parser("(H1) along m: local angle condition at the anchors, and refusal curves around the threshold.",
                     models=("llama3",))
     ap.add_argument("--part", default="both", choices=["local", "fine", "both"])
     ap.add_argument("--n_prompts", type=int, default=100)
@@ -81,7 +81,7 @@ def local(key, S, args):
     ok = n2 > 0
     res, cosines = {}, {}
     print("\n" + "=" * 104)
-    print(f"(H0) LOCAL: angle between the normal at each of the {len(G1)} anchors and each direction")
+    print(f"(H1) LOCAL: angle between the normal at each of the {len(G1)} anchors and each direction")
     print(f"  {'direction':30s} {'cos(d, m)':>9s} {'acute':>8s} {'obtuse (violation)':>19s} {'undecided':>10s} "
           f"{'median cos':>11s}")
     for k, d in dirs.items():
@@ -194,7 +194,7 @@ def fine(key, S, args, judge, clock, redo):
            "median_drop": float(np.median(drops)), "drop_q95": float(np.quantile(drops, 0.95))}
     json.dump(res, open(S / "fine.json", "w"), indent=1)
     print("\n" + "=" * 104)
-    print(f"(H0) FINE along m: {len(data)} complete curves, offsets {Z['offsets']} around each threshold, "
+    print(f"(H1) FINE along m: {len(data)} complete curves, offsets {Z['offsets']} around each threshold, "
           f"{args.k} responses per point")
     print(f"  descent share (downward / total variation): {obs * 100:.1f} % [{res['descent_share_ci'][0] * 100:.1f}; "
           f"{res['descent_share_ci'][1] * 100:.1f}], against {res['descent_share_noise'] * 100:.1f} % from noise alone "

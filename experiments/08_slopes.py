@@ -2,7 +2,7 @@
 """
 08_slopes.py -- the normal to the border at ANCHORS (published prompts taken at their threshold point), estimated
 twice independently; the slope of the threshold follows from it.
-Article: "The slope of the border" (and the data of "(H0) along m", "Adding and removing: (H1)", "The width").
+Article: "A wide region: (H2)" (and the data of "An axis: (H1)").
 Llama-3-8B-Instruct by default. Published prompts of 07_thresholds.py; nothing is generated or optimized.
 
 OBJECTS (one prompt = one fixed context).

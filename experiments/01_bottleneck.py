@@ -2,7 +2,7 @@
 """
 01_bottleneck.py -- is the template state of ONE layer a bottleneck of the refusal decision? One-layer
 transplantation on pairs of (harmful, harmless) prompts, on each model; it designates the main layer c.
-Article: "Models and protocol" (choice of c for Qwen and Gemma) and "A fixed space, and where to find it" (the
+Article: appendix "Protocols" (choice of c for Qwen and Gemma) and "A space that decides alone" (the
 bottleneck of Llama-3-8B at layer 14). Prompts of the repository of Arditi et al.; no attack is generated.
 
 OBJECTS.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 10_gains.py -- how much does ADDING a direction move the margin of the refusal, per unit of norm?
-Article: "Adding and removing, measured: (H1)". Llama-3-8B-Instruct by default. Published prompts
+Article: "An axis: (H1)" (gains along added directions). Llama-3-8B-Instruct by default. Published prompts
 (07_thresholds.py); nothing is generated or optimized.
 
 OBJECTS.

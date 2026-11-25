@@ -11,9 +11,9 @@ x <- x - <x, v> v, ONE scalar product summed over the P positions (a 1-dimension
       vertex 0 (vertex of M different from that of the ablation); e1 removed from the P template positions of layer
       c (P dimensions); the direction of Arditi et al. removed everywhere (all layers, positions, generated tokens),
       and removed from its own layer only, all positions (the intervention of e1 at one layer).
-  (b) ADD, on --n_harmless harmless test prompts: the coordinate of the template state along e1^concat is set to
-      that of the mean harmful state, x <- x + (<mu+_c, v> - <x, v>) v (no hand-chosen amplitude); share of coherent
-      refusals, against no intervention.
+  (b) ADD, on --n_harmless harmless test prompts: x <- x + t v, with t = |mu+_c - mu-_c|, the norm of the difference
+      of the mean harmful and harmless template states (the norm of the direction of Arditi et al. in this space;
+      no hand-chosen amplitude); share of coherent refusals, against no intervention.
   (c) CAPABILITIES under no intervention, e1 everywhere (all layers, positions, generated tokens) and e1^concat:
       MMLU, GSM8K (accuracy, NLL of the reference solution), XSTest.
 
@@ -92,8 +92,8 @@ def run_model(key, args, judge, root):
         texts = [pool[i] for i in r.permutation(len(pool))[:args.n_harmless]]
         ids = [eng.encode(t) for t in texts]
         X = eng.template_states(ids, [c], args.batch_tf)[c].reshape(len(ids), -1)
-        target = float(D["mu_plus"][c].float().reshape(-1) @ v)
-        added = X + (target - X @ v)[:, None] * v[None]
+        t = float((D["mu_plus"][c].float() - D["mu_minus"][c].float()).reshape(-1).norm())
+        added = X + t * v[None]
         inj = eng.add(Inject(eng.model, c, eng.template))
         rows = [(cond, i, s) for cond in (0, 1) for i in range(len(ids)) for s in range(args.samples)]
 
@@ -105,14 +105,14 @@ def run_model(key, args, judge, root):
         eng.hooks.remove(inj)
         vs = judge([(texts[i], eng.decode(reps[x][0])) for x, (_, i, _) in enumerate(rows)], args.batch_judge, clock)
         ref = [bool(vs[x]["refusal"]) and trigram_diversity(reps[x][0]) >= 0.5 for x in range(len(rows))]
-        out = {"target_coordinate": target, "mean_coordinate": float((X @ v).mean())}
+        out = {"amplitude": t}
         for cond, name in ((0, "none"), (1, "added")):
             out[name] = bootstrap_ci([np.mean([ref[x] for x, rw in enumerate(rows) if rw[0] == cond and rw[1] == i])
                                       for i in range(len(ids))])
         return out
     Ad = phase("addition", S / "addition.pt", redo, clock, _addition)
-    print(f"\nADDING e1^concat to {args.n_harmless} harmless test prompts (coordinate {Ad['mean_coordinate']:+.2f} "
-          f"on average, set to {Ad['target_coordinate']:+.2f}, that of the mean harmful state): coherent refusals "
+    print(f"\nADDING e1^concat to {args.n_harmless} harmless test prompts (norm {Ad['amplitude']:.2f}, that of the "
+          f"difference of the mean harmful and harmless states): coherent refusals "
           f"{Ad['added'][0] * 100:.1f} % [{Ad['added'][1] * 100:.1f}; {Ad['added'][2] * 100:.1f}], against "
           f"{Ad['none'][0] * 100:.1f} % without intervention")
 
@@ -134,7 +134,7 @@ def run_model(key, args, judge, root):
         a = Ad[name]
         ax.bar(x, a[0], 0.6, color=col, yerr=[[a[0] - a[1]], [a[2] - a[0]]], capsize=4, label=lab)
     ax.set_xticks([0, 1])
-    ax.set_xticklabels(["no intervention", "e1^concat added\n(coordinate of the mean harmful state)"])
+    ax.set_xticklabels(["no intervention", "e1^concat added\n(norm of the difference of means)"])
     ax.set(ylim=(0, 1.02), ylabel="coherent refusals (95 % CI)",
            title=f"{spec.id}, layer {c}: {args.n_harmless} harmless test prompts")
     ax.grid(alpha=0.3, axis="y")

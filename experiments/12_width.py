@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 12_width.py -- a measurable criterion of WIDTH of the family of refusal regions, on the slopes of the threshold.
-Article: "The width, measured: (H2)". CPU only, no model (reads 08_slopes.py); seconds.
+Article: "A wide region: (H2)". CPU only, no model (reads 08_slopes.py); seconds.
 
 OBJECTS.
   x = y + u m       template state, m unit axis, y orthogonal to m; region of prompt n: {u >= u*_n(y)}.

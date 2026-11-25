@@ -10,7 +10,7 @@ OBJECTS (07_thresholds.py).
 SCORES of the natural refusal (AUC: probability that a refused prompt drawn at random has a higher score than a
 non-refused one; 95 % intervals by bootstrap over prompts):
   u (position only); -u* (threshold only: a low threshold makes refuse); -u* at fixed position (AUC within
-  quintiles of u, weighted average); u - u* (margin: partly true by construction, since under (H0) the sign of the
+  quintiles of u, weighted average); u - u* (margin: partly true by construction, since under (H1) the sign of the
   margin IS the refusal; the informative comparison is between the first two).
   Set (A): censored thresholds excluded; set (B): censored thresholds placed just beyond the bound they touch
   (correct ranks, arbitrary values: only AUCs without strata on u* are meaningful there).

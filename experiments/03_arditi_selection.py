@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 03_arditi_selection.py -- the direction of Arditi et al., SELECTED by their rule, on each model.
-Article: method section (the direction of Arditi et al.). Prompts of their repository; no attack is generated.
+Article: appendix "Protocols" (the direction of Arditi et al.). Prompts of their repository; no attack is generated.
 
 THEIR RULE (Arditi et al., section 2.3 and appendix C).
   candidates   r(l, t) = mu+ - mu- at the input of layer l, at position t of the template (means of
@@ -141,6 +141,16 @@ def run_model(key, args, root):
     pos = t_s - P
     pub = spec.arditi_published
     k = Sc["chosen"]
+    rule = {"layer": int(l_s), "position": int(pos)}
+    if spec.arditi_choice:                               # imposed in configs/models.yaml (see the comment there)
+        l_f, p_f = spec.arditi_choice
+        if (l_f, p_f + P) not in [tuple(c) for c in Sc["candidates"]]:
+            raise SystemExit(f"arditi_choice {spec.arditi_choice} is not a candidate of the rule")
+        clock(f"  their rule picks layer {l_s}, position {pos} (bypass {Sc['bypass'][k]:.2f}); "
+              f"configs/models.yaml imposes layer {l_f}, position {p_f}")
+        k = [tuple(c) for c in Sc["candidates"]].index((l_f, p_f + P))
+        l_s, t_s = Sc["candidates"][k]
+        pos = t_s - P
     clock(f"  chosen: layer {l_s}, position {pos} (bypass {Sc['bypass'][k]:.2f}, induction {Sc['induction'][k]:.2f}, "
           f"KL {Sc['kl'][k]:.3f}; without intervention {Sc['bypass_without']:.2f} / {Sc['induction_without']:.2f}); "
           f"{int(Sc['admissible'].sum())} admissible candidates"
@@ -151,7 +161,8 @@ def run_model(key, args, root):
     r = diff[l_s, t_s] / diff[l_s, t_s].norm()
     torch.save({"layer": int(l_s), "position": int(pos), "direction": r, "published": pub}, S / "arditi.pt")
     json.dump({"layer": int(l_s), "position": int(pos), "published": pub, "admissible": int(Sc["admissible"].sum()),
-               "candidates": len(Sc["candidates"])}, open(S / "summary.json", "w"), indent=1)
+               "candidates": len(Sc["candidates"]), "rule_choice": rule,
+               "imposed": bool(spec.arditi_choice)}, open(S / "summary.json", "w"), indent=1)
 
     plt = mpl()
     nl = max(l for l, _ in Sc["candidates"]) + 1
@@ -163,7 +174,10 @@ def run_model(key, args, root):
     im = ax.imshow(Gr, aspect="auto", cmap="viridis_r", origin="lower")
     xs, ys = np.where(~A.T & ~np.isnan(Gr.T))
     ax.scatter(xs, ys, marker="x", color="white", s=18, label="excluded by the induction or KL filter")
-    ax.scatter([l_s], [t_s], marker="*", color="red", s=220, label="selected direction")
+    ax.scatter([l_s], [t_s], marker="*", color="red", s=220, label="direction used")
+    if spec.arditi_choice:
+        ax.scatter([rule["layer"]], [rule["position"] + P], marker="o", facecolor="none", edgecolor="red", s=160,
+                   label="picked by their rule (not used, see configs/models.yaml)")
     ax.set_yticks(range(P))
     ax.set_yticklabels([str(t - P) for t in range(P)])
     ax.set(xlabel="layer", ylabel="position in the template",

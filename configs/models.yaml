@@ -8,6 +8,11 @@
 #   (no system prompt); "hf" = the chat template of the tokenizer.
 # `refusal_words`: first tokens of refusals, for the refusal score of the selection rule of Arditi et al.
 # `arditi_published`: (layer, position) of the direction published by Arditi et al., printed next to ours.
+# `arditi_choice`: (layer, position) used for the direction of Arditi et al. instead of the candidate their rule picks.
+#   Only for Gemma-2: there, the rule picks layer 23 or layer 31 depending on the estimates of the means (two runs of
+#   experiments/03_arditi_selection.py); the layer-31 direction wins their first-token criterion but leaves 84 % of
+#   refusals when the responses are judged. We use the candidate (23, -1), the stronger of the two, so as not to
+#   compare against a weakened baseline. 03_arditi_selection.py prints both.
 # `revision`: Hugging Face commit of the weights. A direction only makes sense for given weights: fill these with
 #   `python configs/pin_revisions.py` (reads the versions in your local Hugging Face cache).
 llama3:
@@ -40,6 +45,7 @@ gemma:
   template: hf
   revision: 11c9b309abf73637e4b6f9a3fa1e92e615547819
   refusal_words: [I]
+  arditi_choice: [23, -1]
 # the judge (WildGuard), pinned the same way
 judge:
   id: allenai/wildguard
